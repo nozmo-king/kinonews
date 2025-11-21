@@ -95,6 +95,18 @@ kinonews/
 └── README.md         # This file
 ```
 
+## Security Considerations
+
+This is a demonstration application. For production use, consider adding:
+
+- **Rate Limiting**: Implement rate limiting on all routes to prevent abuse
+- **CSRF Protection**: Add CSRF tokens for state-changing operations
+- **Input Validation**: Add comprehensive input sanitization and validation
+- **Password Authentication**: Replace username-only auth with proper authentication
+- **HTTPS**: Always use HTTPS in production
+- **SQL Injection Prevention**: Use parameterized queries (already implemented)
+- **XSS Prevention**: Sanitize user-generated content (consider using a library)
+
 ## License
 
 ISC
