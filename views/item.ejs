@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= post.title %> - KinoNews</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 10pt;
+      background-color: #FFF7DD;
+      color: #000;
+    }
+
+    #header {
+      background-color: #80A1BA;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    #header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #logo {
+      font-weight: bold;
+      color: #FFF7DD;
+      font-size: 14pt;
+      text-decoration: none;
+      padding: 2px 6px;
+      border: 2px solid #FFF7DD;
+      background-color: #80A1BA;
+    }
+
+    #logo:hover {
+      background-color: #91C4C3;
+    }
+
+    #nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 1;
+    }
+
+    #nav a {
+      color: #FFF7DD;
+      text-decoration: none;
+      font-size: 10pt;
+    }
+
+    #nav a:hover {
+      text-decoration: underline;
+    }
+
+    #user-info {
+      color: #FFF7DD;
+      font-size: 10pt;
+    }
+
+    #user-info a {
+      color: #FFF7DD;
+      text-decoration: none;
+    }
+
+    #user-info a:hover {
+      text-decoration: underline;
+    }
+
+    #content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: #FFF7DD;
+    }
+
+    .post-detail {
+      background-color: #FFF7DD;
+      padding: 10px 0;
+    }
+
+    .post-detail-title {
+      font-size: 12pt;
+      margin-bottom: 10px;
+    }
+
+    .post-detail-title a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .post-detail-title a:hover {
+      text-decoration: underline;
+    }
+
+    .post-detail-text {
+      font-size: 9pt;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #B4DEBD;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .post-subtext {
+      font-size: 8pt;
+      color: #828282;
+      margin-top: 5px;
+    }
+
+    .post-subtext a {
+      color: #80A1BA;
+      text-decoration: none;
+    }
+
+    .post-subtext a:hover {
+      text-decoration: underline;
+    }
+
+    .comment-form {
+      margin: 20px 0;
+    }
+
+    .comment-form textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 8px;
+      border: 1px solid #B4DEBD;
+      background-color: #FFF7DD;
+      font-family: inherit;
+      font-size: 9pt;
+      margin-bottom: 5px;
+    }
+
+    .comment-form textarea:focus {
+      outline: none;
+      border-color: #91C4C3;
+      background-color: #fff;
+    }
+
+    .comment-form button {
+      background-color: #80A1BA;
+      color: #FFF7DD;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 9pt;
+      font-family: inherit;
+    }
+
+    .comment-form button:hover {
+      background-color: #91C4C3;
+    }
+
+    .comment-tree {
+      margin-top: 20px;
+    }
+
+    .comment {
+      margin-bottom: 15px;
+      padding-left: 20px;
+      border-left: 2px solid #B4DEBD;
+    }
+
+    .comment-head {
+      font-size: 8pt;
+      color: #828282;
+      margin-bottom: 5px;
+    }
+
+    .comment-head a {
+      color: #80A1BA;
+      text-decoration: none;
+    }
+
+    .comment-head a:hover {
+      text-decoration: underline;
+    }
+
+    .comment-text {
+      font-size: 9pt;
+      margin-bottom: 5px;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .comment-reply {
+      font-size: 8pt;
+    }
+
+    .comment-reply a {
+      color: #80A1BA;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .comment-reply a:hover {
+      text-decoration: underline;
+    }
+
+    .reply-form {
+      margin-top: 10px;
+      display: none;
+      padding-left: 0px;
+    }
+
+    .reply-form.active {
+      display: block;
+    }
+
+    .reply-form textarea {
+      width: 100%;
+      min-height: 60px;
+      padding: 5px;
+      border: 1px solid #B4DEBD;
+      background-color: #FFF7DD;
+      font-family: inherit;
+      font-size: 9pt;
+      margin-bottom: 5px;
+    }
+
+    .reply-form textarea:focus {
+      outline: none;
+      border-color: #91C4C3;
+      background-color: #fff;
+    }
+
+    .reply-form button {
+      background-color: #80A1BA;
+      color: #FFF7DD;
+      border: none;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 8pt;
+      font-family: inherit;
+    }
+
+    .reply-form button:hover {
+      background-color: #91C4C3;
+    }
+
+    .spacer {
+      height: 5px;
+      background-color: #B4DEBD;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <div id="header-inner">
+      <a href="/" id="logo">🎬 KinoNews</a>
+      <div id="nav">
+        <a href="/newest">new</a>
+        <span style="color: #FFF7DD;">|</span>
+        <a href="/submit">submit</a>
+      </div>
+      <div id="user-info">
+        <% if (user) { %>
+          <a href="/user/<%= user.username %>"><%= user.username %></a> (<%= user.id %>)
+          <span style="color: #FFF7DD;">|</span>
+          <a href="/logout">logout</a>
+        <% } else { %>
+          <a href="/login">login</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="post-detail">
+      <div class="post-detail-title">
+        <% if (post.url) { %>
+          <a href="<%= post.url %>"><%= post.title %></a>
+        <% } else { %>
+          <%= post.title %>
+        <% } %>
+      </div>
+      <div class="post-subtext">
+        <%= post.points %> points by 
+        <a href="/user/<%= post.username %>"><%= post.username %></a>
+        <%= timeAgo(post.created_at) %>
+      </div>
+      <% if (post.text) { %>
+        <div class="post-detail-text"><%= post.text %></div>
+      <% } %>
+    </div>
+
+    <div class="spacer"></div>
+
+    <% if (user) { %>
+      <div class="comment-form">
+        <form action="/comment" method="POST">
+          <input type="hidden" name="post_id" value="<%= post.id %>">
+          <textarea name="text" placeholder="Add your comment..." required></textarea>
+          <button type="submit">Add Comment</button>
+        </form>
+      </div>
+    <% } else { %>
+      <p><a href="/login">Login</a> to comment</p>
+    <% } %>
+
+    <div class="comment-tree">
+      <%- renderComments(comments, post.id, user) %>
+    </div>
+  </div>
+
+  <script>
+    function toggleReply(commentId) {
+      const form = document.getElementById('reply-' + commentId);
+      if (form.classList.contains('active')) {
+        form.classList.remove('active');
+      } else {
+        // Hide all other reply forms
+        document.querySelectorAll('.reply-form').forEach(f => f.classList.remove('active'));
+        form.classList.add('active');
+      }
+    }
+  </script>
+
+  <%
+  function timeAgo(timestamp) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const seconds = Math.floor((now - past) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    return Math.floor(seconds / 86400) + ' days ago';
+  }
+
+  function renderComments(comments, postId, user) {
+    if (!comments || comments.length === 0) return '';
+    
+    let html = '';
+    comments.forEach(comment => {
+      html += `
+        <div class="comment">
+          <div class="comment-head">
+            <a href="/user/${comment.username}">${comment.username}</a>
+            ${timeAgo(comment.created_at)} | ${comment.points} points
+          </div>
+          <div class="comment-text">${comment.text}</div>
+          <div class="comment-reply">
+            ${user ? `<a onclick="toggleReply(${comment.id})">reply</a>` : '<a href="/login">login to reply</a>'}
+          </div>
+          ${user ? `
+            <div class="reply-form" id="reply-${comment.id}">
+              <form action="/comment" method="POST">
+                <input type="hidden" name="post_id" value="${postId}">
+                <input type="hidden" name="parent_id" value="${comment.id}">
+                <textarea name="text" placeholder="Reply..." required></textarea>
+                <button type="submit">Reply</button>
+              </form>
+            </div>
+          ` : ''}
+          ${comment.replies && comment.replies.length > 0 ? renderComments(comment.replies, postId, user) : ''}
+        </div>
+      `;
+    });
+    return html;
+  }
+  %>
+</body>
+</html>

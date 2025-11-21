@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KinoNews - Cinema Discussion</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 10pt;
+      background-color: #FFF7DD;
+      color: #000;
+    }
+
+    #header {
+      background-color: #80A1BA;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    #header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #logo {
+      font-weight: bold;
+      color: #FFF7DD;
+      font-size: 14pt;
+      text-decoration: none;
+      padding: 2px 6px;
+      border: 2px solid #FFF7DD;
+      background-color: #80A1BA;
+    }
+
+    #logo:hover {
+      background-color: #91C4C3;
+    }
+
+    #nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 1;
+    }
+
+    #nav a {
+      color: #FFF7DD;
+      text-decoration: none;
+      font-size: 10pt;
+    }
+
+    #nav a:hover {
+      text-decoration: underline;
+    }
+
+    #user-info {
+      color: #FFF7DD;
+      font-size: 10pt;
+    }
+
+    #user-info a {
+      color: #FFF7DD;
+      text-decoration: none;
+    }
+
+    #user-info a:hover {
+      text-decoration: underline;
+    }
+
+    #content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: #FFF7DD;
+    }
+
+    .post-list {
+      background-color: #FFF7DD;
+    }
+
+    .post-item {
+      padding: 4px 0;
+      display: flex;
+      gap: 5px;
+    }
+
+    .post-rank {
+      color: #80A1BA;
+      min-width: 30px;
+      text-align: right;
+      font-size: 10pt;
+    }
+
+    .post-vote {
+      cursor: pointer;
+      color: #80A1BA;
+      font-size: 10pt;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .post-vote:hover {
+      color: #91C4C3;
+    }
+
+    .post-main {
+      flex: 1;
+    }
+
+    .post-title {
+      font-size: 10pt;
+    }
+
+    .post-title a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .post-title a:hover {
+      text-decoration: underline;
+    }
+
+    .post-title a:visited {
+      color: #666;
+    }
+
+    .post-domain {
+      color: #80A1BA;
+      font-size: 8pt;
+      margin-left: 5px;
+    }
+
+    .post-subtext {
+      font-size: 8pt;
+      color: #828282;
+      margin-top: 2px;
+    }
+
+    .post-subtext a {
+      color: #80A1BA;
+      text-decoration: none;
+    }
+
+    .post-subtext a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <div id="header-inner">
+      <a href="/" id="logo">🎬 KinoNews</a>
+      <div id="nav">
+        <a href="/newest">new</a>
+        <span style="color: #FFF7DD;">|</span>
+        <a href="/submit">submit</a>
+      </div>
+      <div id="user-info">
+        <% if (user) { %>
+          <a href="/user/<%= user.username %>"><%= user.username %></a> (<%= user.id %>)
+          <span style="color: #FFF7DD;">|</span>
+          <a href="/logout">logout</a>
+        <% } else { %>
+          <a href="/login">login</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="post-list">
+      <% if (posts.length === 0) { %>
+        <p>No posts yet. <a href="/submit">Submit the first one!</a></p>
+      <% } else { %>
+        <% posts.forEach((post, index) => { %>
+          <div class="post-item">
+            <div class="post-rank"><%= index + 1 %>.</div>
+            <div class="post-vote" onclick="vote(<%= post.id %>, 1)">▲</div>
+            <div class="post-main">
+              <div class="post-title">
+                <% if (post.url) { %>
+                  <a href="<%= post.url %>"><%= post.title %></a>
+                  <span class="post-domain">(<%= new URL(post.url).hostname %>)</span>
+                <% } else { %>
+                  <a href="/item/<%= post.id %>"><%= post.title %></a>
+                <% } %>
+              </div>
+              <div class="post-subtext">
+                <%= post.points %> points by 
+                <a href="/user/<%= post.username %>"><%= post.username %></a>
+                <%= timeAgo(post.created_at) %> |
+                <a href="/item/<%= post.id %>"><%= post.comment_count %> comments</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    function vote(postId, voteType) {
+      fetch('/vote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ post_id: postId, vote_type: voteType })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else if (data.error === 'Not logged in') {
+          window.location.href = '/login';
+        }
+      });
+    }
+  </script>
+
+  <%
+  function timeAgo(timestamp) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const seconds = Math.floor((now - past) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    return Math.floor(seconds / 86400) + ' days ago';
+  }
+  %>
+</body>
+</html>

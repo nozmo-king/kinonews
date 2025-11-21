@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profileUser.username %> - KinoNews</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Verdana, Geneva, sans-serif;
+      font-size: 10pt;
+      background-color: #FFF7DD;
+      color: #000;
+    }
+
+    #header {
+      background-color: #80A1BA;
+      padding: 4px;
+      margin-bottom: 10px;
+    }
+
+    #header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #logo {
+      font-weight: bold;
+      color: #FFF7DD;
+      font-size: 14pt;
+      text-decoration: none;
+      padding: 2px 6px;
+      border: 2px solid #FFF7DD;
+      background-color: #80A1BA;
+    }
+
+    #logo:hover {
+      background-color: #91C4C3;
+    }
+
+    #nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex: 1;
+    }
+
+    #nav a {
+      color: #FFF7DD;
+      text-decoration: none;
+      font-size: 10pt;
+    }
+
+    #nav a:hover {
+      text-decoration: underline;
+    }
+
+    #user-info {
+      color: #FFF7DD;
+      font-size: 10pt;
+    }
+
+    #user-info a {
+      color: #FFF7DD;
+      text-decoration: none;
+    }
+
+    #user-info a:hover {
+      text-decoration: underline;
+    }
+
+    #content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px;
+      background-color: #FFF7DD;
+    }
+
+    .user-profile {
+      padding: 20px 0;
+    }
+
+    .user-profile-header {
+      font-size: 12pt;
+      margin-bottom: 20px;
+      color: #80A1BA;
+    }
+
+    .user-info {
+      font-size: 9pt;
+      color: #828282;
+      margin-bottom: 30px;
+    }
+
+    .user-section {
+      margin-bottom: 30px;
+    }
+
+    .user-section h3 {
+      font-size: 10pt;
+      color: #80A1BA;
+      margin-bottom: 10px;
+    }
+
+    .post-item {
+      padding: 4px 0;
+      margin-bottom: 5px;
+    }
+
+    .post-title {
+      font-size: 9pt;
+    }
+
+    .post-title a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .post-title a:hover {
+      text-decoration: underline;
+    }
+
+    .post-subtext {
+      font-size: 8pt;
+      color: #828282;
+      margin-top: 2px;
+    }
+
+    .post-subtext a {
+      color: #80A1BA;
+      text-decoration: none;
+    }
+
+    .post-subtext a:hover {
+      text-decoration: underline;
+    }
+
+    .comment-item {
+      padding: 8px 0;
+      margin-bottom: 10px;
+      border-left: 2px solid #B4DEBD;
+      padding-left: 10px;
+    }
+
+    .comment-context {
+      font-size: 8pt;
+      color: #828282;
+      margin-bottom: 5px;
+    }
+
+    .comment-context a {
+      color: #80A1BA;
+      text-decoration: none;
+    }
+
+    .comment-context a:hover {
+      text-decoration: underline;
+    }
+
+    .comment-text {
+      font-size: 9pt;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <div id="header-inner">
+      <a href="/" id="logo">🎬 KinoNews</a>
+      <div id="nav">
+        <a href="/newest">new</a>
+        <span style="color: #FFF7DD;">|</span>
+        <a href="/submit">submit</a>
+      </div>
+      <div id="user-info">
+        <% if (user) { %>
+          <a href="/user/<%= user.username %>"><%= user.username %></a> (<%= user.id %>)
+          <span style="color: #FFF7DD;">|</span>
+          <a href="/logout">logout</a>
+        <% } else { %>
+          <a href="/login">login</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div id="content">
+    <div class="user-profile">
+      <div class="user-profile-header">
+        <%= profileUser.username %> (user #<%= profileUser.id %>)
+      </div>
+
+      <div class="user-info">
+        Member since <%= new Date(profileUser.created_at).toLocaleDateString() %>
+      </div>
+
+      <div class="user-section">
+        <h3>Submissions</h3>
+        <% if (posts.length === 0) { %>
+          <p style="font-size: 9pt; color: #828282;">No submissions yet</p>
+        <% } else { %>
+          <% posts.forEach(post => { %>
+            <div class="post-item">
+              <div class="post-title">
+                <% if (post.url) { %>
+                  <a href="<%= post.url %>"><%= post.title %></a>
+                <% } else { %>
+                  <a href="/item/<%= post.id %>"><%= post.title %></a>
+                <% } %>
+              </div>
+              <div class="post-subtext">
+                <%= post.points %> points | <%= timeAgo(post.created_at) %> | 
+                <a href="/item/<%= post.id %>"><%= post.comment_count %> comments</a>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+
+      <div class="user-section">
+        <h3>Comments</h3>
+        <% if (comments.length === 0) { %>
+          <p style="font-size: 9pt; color: #828282;">No comments yet</p>
+        <% } else { %>
+          <% comments.forEach(comment => { %>
+            <div class="comment-item">
+              <div class="comment-context">
+                on <a href="/item/<%= comment.post_id %>"><%= comment.post_title %></a> | <%= timeAgo(comment.created_at) %>
+              </div>
+              <div class="comment-text">
+                <%= comment.text.length > 200 ? comment.text.substring(0, 200) + '...' : comment.text %>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <%
+  function timeAgo(timestamp) {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const seconds = Math.floor((now - past) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+    if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+    return Math.floor(seconds / 86400) + ' days ago';
+  }
+  %>
+</body>
+</html>
