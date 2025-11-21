@@ -322,16 +322,16 @@ class KinonewsApp {
                             <span class="post-rank">${index + 1}.</span>
                             <h3 class="post-title">
                                 ${post.url ? 
-                                    `<a href="${post.url}" target="_blank" rel="noopener noreferrer">${this.escapeHtml(post.title)}</a>
-                                     <span class="post-url">(${domain})</span>` :
+                                    `<a href="${this.escapeHtml(post.url)}" target="_blank" rel="noopener noreferrer">${this.escapeHtml(post.title)}</a>
+                                     <span class="post-url">(${this.escapeHtml(domain)})</span>` :
                                     `<a href="#post-${post.id}">${this.escapeHtml(post.title)}</a>`
                                 }
                             </h3>
-                            <span class="post-category">${post.category}</span>
+                            <span class="post-category">${this.escapeHtml(post.category)}</span>
                         </div>
                         ${post.text ? `<p style="margin-top: 8px; color: #5a6c7d; font-size: 14px;">${this.escapeHtml(post.text.substring(0, 200))}${post.text.length > 200 ? '...' : ''}</p>` : ''}
                         <div class="post-meta">
-                            by <a href="#user-${post.author}">${post.author}</a> | 
+                            by <a href="#user-${this.escapeHtml(post.author)}">${this.escapeHtml(post.author)}</a> | 
                             ${timeAgo} | 
                             <a href="#comments-${post.id}">${post.comments} comments</a>
                         </div>
