@@ -237,29 +237,59 @@ app.post('/vote', (req, res) => {
   const { post_id, comment_id, vote_type } = req.body;
 
   if (post_id) {
-    db.run(
-      'INSERT OR REPLACE INTO votes (user_id, post_id, vote_type) VALUES (?, ?, ?)',
-      [req.user.id, post_id, vote_type],
-      (err) => {
-        if (err) {
-          return res.json({ error: 'Error voting' });
-        }
-        db.run('UPDATE posts SET points = points + ? WHERE id = ?', [vote_type, post_id]);
-        res.json({ success: true });
+    // Check if user already voted
+    db.get('SELECT vote_type FROM votes WHERE user_id = ? AND post_id = ?', [req.user.id, post_id], (err, existingVote) => {
+      if (err) {
+        return res.json({ error: 'Error voting' });
       }
-    );
+
+      db.run(
+        'INSERT OR REPLACE INTO votes (user_id, post_id, vote_type) VALUES (?, ?, ?)',
+        [req.user.id, post_id, vote_type],
+        (err) => {
+          if (err) {
+            return res.json({ error: 'Error voting' });
+          }
+          
+          // Calculate point delta
+          const pointDelta = existingVote ? vote_type - existingVote.vote_type : vote_type;
+          
+          db.run('UPDATE posts SET points = points + ? WHERE id = ?', [pointDelta, post_id], (err) => {
+            if (err) {
+              console.error('Error updating post points:', err);
+            }
+            res.json({ success: true });
+          });
+        }
+      );
+    });
   } else if (comment_id) {
-    db.run(
-      'INSERT OR REPLACE INTO votes (user_id, comment_id, vote_type) VALUES (?, ?, ?)',
-      [req.user.id, comment_id, vote_type],
-      (err) => {
-        if (err) {
-          return res.json({ error: 'Error voting' });
-        }
-        db.run('UPDATE comments SET points = points + ? WHERE id = ?', [vote_type, comment_id]);
-        res.json({ success: true });
+    // Check if user already voted
+    db.get('SELECT vote_type FROM votes WHERE user_id = ? AND comment_id = ?', [req.user.id, comment_id], (err, existingVote) => {
+      if (err) {
+        return res.json({ error: 'Error voting' });
       }
-    );
+
+      db.run(
+        'INSERT OR REPLACE INTO votes (user_id, comment_id, vote_type) VALUES (?, ?, ?)',
+        [req.user.id, comment_id, vote_type],
+        (err) => {
+          if (err) {
+            return res.json({ error: 'Error voting' });
+          }
+          
+          // Calculate point delta
+          const pointDelta = existingVote ? vote_type - existingVote.vote_type : vote_type;
+          
+          db.run('UPDATE comments SET points = points + ? WHERE id = ?', [pointDelta, comment_id], (err) => {
+            if (err) {
+              console.error('Error updating comment points:', err);
+            }
+            res.json({ success: true });
+          });
+        }
+      );
+    });
   }
 });
 

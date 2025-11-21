@@ -190,7 +190,9 @@
               <div class="post-title">
                 <% if (post.url) { %>
                   <a href="<%= post.url %>"><%= post.title %></a>
-                  <span class="post-domain">(<%= new URL(post.url).hostname %>)</span>
+                  <% try { %>
+                    <span class="post-domain">(<%= new URL(post.url).hostname %>)</span>
+                  <% } catch (e) { %><% } %>
                 <% } else { %>
                   <a href="/item/<%= post.id %>"><%= post.title %></a>
                 <% } %>
