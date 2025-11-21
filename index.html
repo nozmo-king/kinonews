@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kinonews - Cinema News</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">
+                    <a href="/">🎬 kinonews</a>
+                </h1>
+                <nav class="nav">
+                    <a href="#" class="nav-link active">new</a>
+                    <a href="#" class="nav-link">top</a>
+                    <a href="#" class="nav-link">best</a>
+                    <a href="#" class="nav-link">submit</a>
+                </nav>
+                <div class="user-actions">
+                    <span id="username-display" class="username" style="display: none;"></span>
+                    <button id="login-btn" class="btn-link">login</button>
+                    <button id="logout-btn" class="btn-link" style="display: none;">logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container main-content">
+        <div id="posts-container" class="posts-list">
+            <!-- Posts will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Login/Register Modal -->
+    <div id="auth-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Quick Account Creation</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required minlength="3" maxlength="20">
+                </div>
+                <button type="submit" class="btn-primary">Create Account & Login</button>
+            </form>
+            <p class="help-text">Just enter a username - no password needed for quick access!</p>
+        </div>
+    </div>
+
+    <!-- Submit Post Modal -->
+    <div id="submit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Submit Cinema News</h2>
+            <form id="submit-form">
+                <div class="form-group">
+                    <label for="post-title">Title:</label>
+                    <input type="text" id="post-title" name="title" required maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label for="post-url">URL (optional):</label>
+                    <input type="url" id="post-url" name="url">
+                </div>
+                <div class="form-group">
+                    <label for="post-text">Text (optional):</label>
+                    <textarea id="post-text" name="text" rows="6"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="post-category">Category:</label>
+                    <select id="post-category" name="category">
+                        <option value="news">News</option>
+                        <option value="review">Review</option>
+                        <option value="discussion">Discussion</option>
+                        <option value="recommendation">Recommendation</option>
+                        <option value="festival">Festival</option>
+                        <option value="box-office">Box Office</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary">Submit Post</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>kinonews - A cinema news community | Color scheme: #80A1BA #91C4C3 #B4DEBD #FFF7DD</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
