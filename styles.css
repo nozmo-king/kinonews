@@ -16,6 +16,7 @@
     --color-text-light: #5a6c7d;
     --color-border: #91C4C3;
     --color-hover: #6a91aa;
+    --color-post-hover: #f9f9f5;
 }
 
 body {
@@ -138,7 +139,7 @@ body {
 }
 
 .post-item:hover {
-    background-color: #f9f9f5;
+    background-color: var(--color-post-hover);
 }
 
 .post-item:last-child {

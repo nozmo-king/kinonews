@@ -69,6 +69,7 @@ class KinonewsApp {
         this.posts = [];
         this.currentUser = null;
         this.userVotes = {};
+        this.nextPostId = 1000; // Start IDs at 1000 to avoid conflicts with sample posts
         this.init();
     }
 
@@ -95,6 +96,7 @@ class KinonewsApp {
             const postsData = localStorage.getItem('kinonews_posts');
             const userData = localStorage.getItem('kinonews_user');
             const votesData = localStorage.getItem('kinonews_votes');
+            const nextIdData = localStorage.getItem('kinonews_next_id');
 
             if (postsData) {
                 this.posts = JSON.parse(postsData);
@@ -104,6 +106,9 @@ class KinonewsApp {
             }
             if (votesData) {
                 this.userVotes = JSON.parse(votesData);
+            }
+            if (nextIdData) {
+                this.nextPostId = JSON.parse(nextIdData);
             }
         } catch (e) {
             console.error('Error loading from storage:', e);
@@ -115,6 +120,7 @@ class KinonewsApp {
             localStorage.setItem('kinonews_posts', JSON.stringify(this.posts));
             localStorage.setItem('kinonews_user', JSON.stringify(this.currentUser));
             localStorage.setItem('kinonews_votes', JSON.stringify(this.userVotes));
+            localStorage.setItem('kinonews_next_id', JSON.stringify(this.nextPostId));
         } catch (e) {
             console.error('Error saving to storage:', e);
         }
@@ -229,7 +235,7 @@ class KinonewsApp {
 
         const timestamp = Date.now();
         const newPost = {
-            id: timestamp + Math.floor(Math.random() * 1000),
+            id: this.nextPostId++,
             title: title,
             url: url || null,
             text: text || null,
