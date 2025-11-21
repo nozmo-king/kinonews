@@ -146,7 +146,6 @@ class KinonewsApp {
         });
 
         // Submit button
-        const submitLink = document.querySelector('.nav-link[href="#"]');
         const submitLinks = document.querySelectorAll('.nav-link');
         submitLinks.forEach(link => {
             if (link.textContent === 'submit') {
@@ -228,8 +227,9 @@ class KinonewsApp {
             return;
         }
 
+        const timestamp = Date.now();
         const newPost = {
-            id: Date.now(),
+            id: timestamp + Math.floor(Math.random() * 1000),
             title: title,
             url: url || null,
             text: text || null,
@@ -237,7 +237,7 @@ class KinonewsApp {
             author: this.currentUser.username,
             points: 1,
             comments: 0,
-            timestamp: Date.now()
+            timestamp: timestamp
         };
 
         // Auto-upvote own post
